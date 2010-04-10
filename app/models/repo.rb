@@ -179,11 +179,15 @@ protected
   # Once all tables have been update we compute the rank of each contributor.
   def update_ranks
     rank = 0
+    nsame_rank = 1
     ncon = nil
     Contributor.all_with_ncontributions.each do |contributor|
       if contributor.ncontributions != ncon
-        rank += 1
+        rank += nsame_rank
+        nsame_rank = 1
         ncon = contributor.ncontributions
+      else
+        nsame_rank += 1
       end
       contributor.update_attribute(:rank, rank) if contributor.rank != rank
     end
